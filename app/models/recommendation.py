@@ -13,7 +13,7 @@ class Recommendation(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     recommendation_text = Column(Text)                   # Текст рекомендации
     type = Column(String)                                # Тип рекомендации (психологическая, физическая, по питанию)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
 
 
     user = relationship('User', back_populates='recommendations')

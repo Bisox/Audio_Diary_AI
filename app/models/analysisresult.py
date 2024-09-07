@@ -16,7 +16,7 @@ class AnalysisResult(Base):
     stress_level = Column(Integer)                         # Уровень стресса
     key_insights = Column(Text)                            # Ключевые выводы из анализа
 
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
 
     # Связи
     user = relationship('User', back_populates='analysis_results')

@@ -13,7 +13,7 @@ class DayPlan(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     plan_description = Column(Text)                         # Описание плана дня
     productivity_score = Column(Integer)                    # Оценка продуктивности (0-100)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
 
 
     user = relationship('User', back_populates='day_plans')

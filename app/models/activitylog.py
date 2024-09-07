@@ -13,7 +13,7 @@ class ActivityLog(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     activity_type = Column(String)                    # Тип активности (работа, учеба, отдых)
     duration = Column(Integer)                        # Продолжительность в минутах
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
 
     # Связь с пользователем
     user = relationship('User', back_populates='activity_logs')

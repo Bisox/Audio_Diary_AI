@@ -13,7 +13,7 @@ class AudioDiary(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     audio_file_url = Column(String, nullable=False)                  # Ссылка на аудиофайл
     transcript = Column(Text)                                        # Текстовая версия аудио
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
 
     # Связь с пользователем
     user = relationship('User', back_populates='audio_diaries')
