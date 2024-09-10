@@ -13,7 +13,7 @@ class FoodDiary(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     meal_time = Column(String)                          # Время приема пищи (завтрак, обед, ужин)
     food_description = Column(Text)                     # Описание еды
-    created_at = Column(DateTime, default=lambda: datetime.now().replace(tzinfo=None))
+    created_at = Column(DateTime, default = lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
 
     user = relationship('User', back_populates='food_diaries')
