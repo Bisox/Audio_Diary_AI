@@ -1,12 +1,12 @@
 from fastapi import HTTPException
+
 from sqlalchemy import select, insert
 
-from passlib.context import CryptContext
-
+from app.sevices.security import bcrypt_context
 from app.models import User
 
 
-bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+
 
 class UserService:
 
