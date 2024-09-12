@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 from fastapi import HTTPException
 
 from sqlalchemy import select, insert
 
+from app.sevices.auth_helpers import authenticate_user, create_access_token
 from app.sevices.security import bcrypt_context
 from app.models import User
 
@@ -36,5 +39,23 @@ class UserService:
         if new_user is None:
             raise HTTPException(status_code=404, detail="User not found after creation")
         return new_user
+
+
+
+    @staticmethod
+    async def get_token(db, user):
+          user_auth = await authenticate_user(db, user.username, user.password)
+          token = await create_access_token(user_auth.username,
+                                            user_auth.id,
+                                            user_auth.email,
+                                            expires_delta=timedelta(minutes=20))
+
+          return {
+              'access_token': token,
+              'token_type': 'bearer'
+          }
+
+
+
 
 
