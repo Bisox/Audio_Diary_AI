@@ -1,11 +1,12 @@
 from datetime import timedelta
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 
 from sqlalchemy import select, insert
+from typing import Annotated
 
-from app.sevices.auth_helpers import authenticate_user, create_access_token
-from app.sevices.security import bcrypt_context
+from app.sevices.auth_helpers import authenticate_user, create_access_token, check_token
+from app.sevices.security import bcrypt_context, oauth2_scheme
 from app.models import User
 
 
@@ -18,7 +19,7 @@ class UserService:
     async def check_user(db, user):
         check_query = select(User).where(User.email == user.email)
         result = await db.execute(check_query)
-        existing_user = result.scalars().fetchall()
+        existing_user = result.scalar_one_or_none()
 
         if existing_user:
             raise HTTPException(status_code=400, detail="Email already registered")
@@ -51,11 +52,14 @@ class UserService:
                                             expires_delta=timedelta(minutes=20))
 
           return {
-              'access_token': token,
-              'token_type': 'bearer'
+              "access_token": token,
+              "token_type": "bearer"
           }
 
 
-
+    @staticmethod
+    async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+        user_data = await check_token(token)
+        return user_data
 
 

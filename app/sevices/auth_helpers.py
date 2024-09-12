@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 
 from fastapi import HTTPException, status
-from jose import jwt
+from jose import jwt, JWTError
 from sqlalchemy import select
 
 from app.models.user import User
@@ -30,3 +30,29 @@ async def create_access_token(username: str,
     expires = datetime.now() + expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+
+async def check_token(token: str):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username: str = payload.get('sub')
+        user_id: int = payload.get('id')
+        email: str = payload.get('email')
+
+        if not username or not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate user"
+            )
+
+        return {
+            'username': username,
+            'id': user_id,
+            'email': email,
+        }
+    except JWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+        )
