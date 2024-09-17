@@ -16,3 +16,18 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+class ActivityCreate(BaseModel):
+    user_id: int
+    activity_type: str
+    duration: int
+
+
+class ActivityResponse(BaseModel):
+    activity_id: int
+    duration: int
+
+    class Config:
+        from_attributes = True
