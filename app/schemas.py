@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -20,14 +22,16 @@ class UserResponse(BaseModel):
 
 
 class ActivityCreate(BaseModel):
-    user_id: int
     activity_type: str
     duration: int
 
 
 class ActivityResponse(BaseModel):
-    activity_id: int
+    id: int
+    activity_type: str
     duration: int
+    created_at: datetime
+
 
     class Config:
         from_attributes = True
