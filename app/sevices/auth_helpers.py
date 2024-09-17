@@ -23,10 +23,9 @@ async def authenticate_user(db, user: str, password: str):
 
 async def create_access_token(username: str,
                               user_id: int,
-                              email: str,
                               expires_delta: timedelta):
 
-    encode = {'sub': username, 'id': user_id, 'email': email}
+    encode = {'sub': username, 'id': user_id}
     expires = datetime.now() + expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
@@ -38,7 +37,7 @@ async def check_token(token: str):
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username: str = payload.get('sub')
         user_id: int = payload.get('id')
-        email: str = payload.get('email')
+
 
         if not username or not user_id:
             raise HTTPException(
@@ -49,7 +48,7 @@ async def check_token(token: str):
         return {
             'username': username,
             'id': user_id,
-            'email': email,
+
         }
     except JWTError as e:
         raise HTTPException(

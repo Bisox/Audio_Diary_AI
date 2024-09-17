@@ -48,7 +48,6 @@ class UserService:
           user_auth = await authenticate_user(db, user.username, user.password)
           token = await create_access_token(user_auth.username,
                                             user_auth.id,
-                                            user_auth.email,
                                             expires_delta=timedelta(minutes=20))
 
           return {
